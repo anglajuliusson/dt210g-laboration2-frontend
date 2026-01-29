@@ -10,6 +10,6 @@ html, body {
 }
 @media (max-width: 768px) {
   footer p {
-      font-size: small;
+      font-size: 12px;
   }
 }
