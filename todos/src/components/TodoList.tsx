@@ -11,7 +11,9 @@ const todoListStyle = {
 
 // Inline styling för listan
 const listStyle = {
-    backgroundColor: "rgb(237, 251, 255)"
+    backgroundColor: "rgb(237, 251, 255)",
+    borderRadius: "10px",
+    padding: "2em",
 }
 
 function TodoList() {
@@ -49,16 +51,18 @@ function TodoList() {
 
     return(
         <div style={todoListStyle}>
-            <h2 style={{ textAlign: "center", marginBottom: "1em" }}>Att göra:</h2>
-            {/* Lista som innehåller alla todos */}
-            <ul style={listStyle}>
-                {/* Loopa igenom todos-arrayen och renderar en Todo-komponent per objekt */}
-                {
-                    todos.map((todo) => (
-                        <Todo todoProp={todo} key={todo.id}/>
-                    ))
-                }
-            </ul>
+            <div style={listStyle}>
+                <h2 style={{ textAlign: "center", marginBottom: "1em" }}>Att göra:</h2>
+                {/* Lista som innehåller alla todos */}
+                <ul>
+                    {/* Loopa igenom todos-arrayen och renderar en Todo-komponent per objekt */}
+                    {
+                        todos.map((todo) => (
+                            <Todo todoProp={todo} key={todo.id}/>
+                        ))
+                    }
+                </ul>
+            </div>
         </div>
     )
 }
