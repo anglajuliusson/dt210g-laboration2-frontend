@@ -1,4 +1,4 @@
-// Inline-styling för header (komponentspecifik CSS)
+// Inline-styling för footer (komponentspecifik CSS)
 const footerStyle = {
     backgroundColor: "rgb(142, 182, 195)",
     color: "white",
