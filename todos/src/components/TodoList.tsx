@@ -6,7 +6,7 @@ import type { TodoInterface } from "../interfaces/TodoInterface"; // Imporetera 
 const todoListStyle = {
     backgroundColor: "rgb(198, 228, 237)",
     color: "rgb(84, 84, 84)",
-    padding: "3rem",
+    padding: "3rem 3rem 1rem 3rem",
 }
 
 // Inline styling för listan
