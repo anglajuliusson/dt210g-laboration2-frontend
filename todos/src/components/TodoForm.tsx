@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormDataInterface } from "../interfaces/FormDataInterface"; // Importera FormDataInterface
 import type { ErrorsDataInterface} from "../interfaces/ErrorsDataInterface"; // Importera ErrorsDataInterface
+import * as Yup from "Yup"; // Importera Yup för tillgång till alla funktioner
 
 // Inline-styling för todoform (komponentspecifik CSS)
 const todoFormStyle = {
