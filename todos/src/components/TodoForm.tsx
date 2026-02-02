@@ -71,6 +71,13 @@ const TodoForm = () =>  {
     // Array med möjliga statusalternativ för todos
     const statusArr = ["Ej påbörjad", "Pågående", "Avklarad"];
 
+    // Validerings schema
+    const validationSchema = Yup.object({
+        title: Yup.string().required("Fyll i titel").min(3), // Titeln måste fyllas i och vara minst 3 tecken
+        description: Yup.string().optional().max(200), // Beskrivning är valfri men får max vara 200 tecken
+        status: Yup.string().required("Välj en status från listan")
+    });
+
     // States för felmeddelanden
     const [errors, serErrors] = useState<ErrorsDataInterface>({});
 
