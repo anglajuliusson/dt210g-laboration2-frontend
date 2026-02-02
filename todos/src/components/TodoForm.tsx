@@ -85,6 +85,7 @@ const TodoForm = () =>  {
     const submitForm = ((event: any) => {
         event.preventDefault(); // Förhindrar att sidan laddas om
 
+        /*
         // Validerar formulärdata och returnerar eventuella fel
         const validateForm = ((data: FormDataInterface) => {
             const validationErrors: ErrorsDataInterface = {};
@@ -98,6 +99,8 @@ const TodoForm = () =>  {
 
             return validationErrors;
         });
+        */
+        
 
         // Kör validering på aktuell formulärdata
         const validationErrors = validateForm(formData)
