@@ -20,15 +20,24 @@ function TodoList() {
 
     // State för todos
     const [todos, setTodos] = useState<[TodoInterface] | []>([]);
+    const [loading, setLoading] = useState(false);
 
     // UseEffekt för att hämta in todos
     useEffect(() => {
         getAllTodos()
     }, []);
 
+    // Hjälpfunktion för att skapa fördröjning
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
     // Asynkron funktion som hämtar alla todos från backend-API:t
     const getAllTodos = async () => {
         try {
+
+            setLoading(true);
+
+            await delay(2000);
+
             // Skickar GET-request till backend
             const resp = await fetch("http://localhost:3000/todos");
 
@@ -46,6 +55,8 @@ function TodoList() {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -53,6 +64,11 @@ function TodoList() {
         <div style={todoListStyle}>
             <div style={listStyle}>
                 <h2 style={{ textAlign: "center", marginBottom: "1em" }}>Att göra:</h2>
+
+                {/* Meddelande som visas vid laddning av att hämta in alla todos */}
+                {
+                    loading && <p style={{textAlign: "center"}}>Hämtar todos...</p>
+                }
                 {/* Lista som innehåller alla todos */}
                 <ul>
                     {/* Loopa igenom todos-arrayen och renderar en Todo-komponent per objekt */}
