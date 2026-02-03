@@ -1,4 +1,5 @@
 export interface ErrorsDataInterface {
     title?: string,
-    description?: string
+    description?: string,
+    status?: string
 }
