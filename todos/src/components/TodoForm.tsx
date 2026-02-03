@@ -73,17 +73,51 @@ const TodoForm = () =>  {
 
     // Validerings schema
     const validationSchema = Yup.object({
-        title: Yup.string().required("Fyll i titel").min(3), // Titeln måste fyllas i och vara minst 3 tecken
+        title: Yup.string().required("Fyll i titel").min(3, "Titel måste vara minst 3 tecken"), // Titeln måste fyllas i och vara minst 3 tecken
         description: Yup.string().optional().max(200), // Beskrivning är valfri men får max vara 200 tecken
-        status: Yup.string().required("Välj en status från listan")
+        status: Yup.string().required("Välj en status från listan") // Felmeddelande för status men kommer förmodligen aldrig synas
     });
 
     // States för felmeddelanden
-    const [errors, serErrors] = useState<ErrorsDataInterface>({});
+    const [errors, setErrors] = useState<ErrorsDataInterface>({});
 
     // Funktion som körs när formuläret skickas
-    const submitForm = ((event: any) => {
+    const submitForm = async (event: any) => {
         event.preventDefault(); // Förhindrar att sidan laddas om
+
+        try {
+            // Validerar formulärdata med Yup-schema.
+            // abortEarly: false gör att vi får ALLA fel samtidigt (inte bara första felet)
+            await validationSchema.validate(formData, {abortEarly: false});
+
+            // Om valideringen lyckas: rensa tidigare felmeddelanden
+            setErrors({});
+
+        } catch (errors) {
+
+            // Skapar ett objekt som samlar fel per fält
+            // Används sedan för att visa felmeddelanden i formuläret
+            const validationErrors: ErrorsDataInterface = {};
+
+            // Säkerställer att felet faktiskt är ett Yup ValidationError
+            if(errors instanceof Yup.ValidationError) {
+
+                // errors.inner innehåller alla valideringsfel (ett per fält)
+                // Loopar igenom och mappar varje fel till rätt property i validationErrors
+                errors.inner.forEach(error => {
+
+                    // error.path innehåller namnet på fältet som valideringen gäller
+                    // Typ-castar till nycklarna i ErrorsDataInterface för TypeScript-säkerhet
+                    const prop = error.path as keyof ErrorsDataInterface;
+
+                    // Sätter felmeddelandet på motsvarande fält
+                    validationErrors[prop] = error.message;
+                })
+
+                // Uppdaterar state så att felmeddelanden visas
+                setErrors(validationErrors);
+            }
+        }
 
         /*
         // Validerar formulärdata och returnerar eventuella fel
@@ -101,21 +135,21 @@ const TodoForm = () =>  {
         });
         */
         
-
+        /*
         // Kör validering på aktuell formulärdata
         const validationErrors = validateForm(formData)
 
         // Om det finns valideringsfel – visa dem
         if(Object.keys(validationErrors).length > 0) {
-            serErrors(validationErrors);
+            setErrors(validationErrors);
 
         } else {
             // Nollställ felmeddelanden
-            serErrors({});
+            setErrors({});
 
             // Skicka data
-        }
-    });
+        }*/
+    };
 
     return(
         <div style={todoFormStyle}>
@@ -146,6 +180,8 @@ const TodoForm = () =>  {
                                 ))
                             }
                         </select>
+
+                        {errors.status && <span style={errorStyle}>{errors.status}</span>}
                     </div>
                     <div style={buttonWrapperStyle}>
                         <input type="submit" value="Lägg till" style={buttonStyle} />
