@@ -68,6 +68,10 @@ const TodoForm = () =>  {
     // States för formulär
     // State som lagrar användarens input i formuläret
     const [formData, setFormData] = useState<FormDataInterface>({title: "", description: "", status: "Ej påbörjad"});
+
+    // State för att spara ny todo till databasen
+    const [addTodo, setAddTodo] = useState(false);
+
     // Array med möjliga statusalternativ för todos
     const statusArr = ["Ej påbörjad", "Pågående", "Avklarad"];
 
@@ -93,6 +97,14 @@ const TodoForm = () =>  {
             // Om valideringen lyckas: rensa tidigare felmeddelanden
             setErrors({});
 
+            setAddTodo(true);
+            await createTodo(formData);
+
+            // Efter lyckad POST skickas ett custom event som används för att tala om för TodoList att den ska hämta om todos utan sidomladdning
+            window.dispatchEvent(new Event("todos:refresh"));
+
+            setFormData({ title: "", description: "", status: "Ej påbörjad" });
+
         } catch (errors) {
 
             // Skapar ett objekt som samlar fel per fält
@@ -117,6 +129,8 @@ const TodoForm = () =>  {
                 // Uppdaterar state så att felmeddelanden visas
                 setErrors(validationErrors);
             }
+        } finally {
+            setAddTodo(false);
         }
 
         /*
@@ -149,6 +163,22 @@ const TodoForm = () =>  {
 
             // Skicka data
         }*/
+    };
+
+    // Skickar POST-request till backend för att skapa en ny todo
+    // Vid lyckat svar nollställs formuläret
+    const createTodo = async (data: FormDataInterface) => {
+        const resp = await fetch("http://localhost:3000/todos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+
+        if (!resp.ok) {
+            const msg = await resp.text();
+            console.log("400 från backend:", msg);
+            throw new Error(msg);
+          }
     };
 
     return(
@@ -184,7 +214,9 @@ const TodoForm = () =>  {
                         {errors.status && <span style={errorStyle}>{errors.status}</span>}
                     </div>
                     <div style={buttonWrapperStyle}>
-                        <input type="submit" value="Lägg till" style={buttonStyle} />
+                        <input type="submit" value={addTodo ? "Sparar..." :  "Lägg till"} 
+                        style={buttonStyle} 
+                        disabled={addTodo}/>
                     </div>
                 </form>
             </div>
