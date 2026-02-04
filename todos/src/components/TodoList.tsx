@@ -22,9 +22,14 @@ function TodoList() {
     const [todos, setTodos] = useState<[TodoInterface] | []>([]);
     const [loading, setLoading] = useState(false);
 
-    // UseEffekt för att hämta in todos
+    // UseEffekt för att hämta in todos både när komponenten mountas och när ett "todos:refresh"-event triggas från TodoForm
     useEffect(() => {
         getAllTodos()
+
+        const handler = () => getAllTodos();
+        window.addEventListener("todos:refresh", handler);
+
+        return () => window.removeEventListener("todos:refresh", handler);
     }, []);
 
     // Hjälpfunktion för att skapa fördröjning
