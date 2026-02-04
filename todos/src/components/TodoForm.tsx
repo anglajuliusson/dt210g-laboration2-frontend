@@ -78,7 +78,7 @@ const TodoForm = () =>  {
     // Validerings schema
     const validationSchema = Yup.object({
         title: Yup.string().required("Fyll i titel").min(3, "Titel måste vara minst 3 tecken"), // Titeln måste fyllas i och vara minst 3 tecken
-        description: Yup.string().optional().max(200), // Beskrivning är valfri men får max vara 200 tecken
+        description: Yup.string().optional().max(200, "Beskrivningen får max vara 200 tecken"), // Beskrivning är valfri men får max vara 200 tecken
         status: Yup.string().required("Välj en status från listan") // Felmeddelande för status men kommer förmodligen aldrig synas
     });
 
